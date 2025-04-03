@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import CartModal from "../components/cartModal";
 import ProductModal from "../components/productModal";
 import PurchaseModal from "../components/purchaseModal";
-import SearchBar from "@/components/searchbar";
+import SearchBar from "../components/searchbar";
 
 function Toast({ message, onClose }) {
   return (
