@@ -1,40 +1,21 @@
-import products from "../../../data/products";
+export default async function handler(req, res) {
+  const {
+    query: { id },
+  } = req;
 
-export default function handler(req, res) {
-  const { id } = req.query;
-
-  // not the most RESTful stlye
-  if (req.method == "GET" && id == "*") {
-    // only id, name, price, description
-    const productsRes = products.map(({ id, name, price, description }) => ({
-      id,
-      name,
-      price,
-      description,
-    }));
-    return res.status(200).json(productsRes);
+  if (!id || isNaN(id)) {
+    return res.status(400).json({ message: "Ungültige Produkt-ID" });
   }
 
-  if (req.method == "GET") {
-    const product = products.find((p) => p.id === parseInt(id));
-
-    if (!product) {
-      return res.status(404).json({ message: "Product not found!" });
+  try {
+    const response = await fetch(`https://fakestoreapi.com/products/${id}`);
+    if (!response.ok) {
+      return res.status(404).json({ message: "Produkt nicht gefunden" });
     }
 
-    // check if details is set to 1
-    const showDetails = req.query.details === "1";
-
-    // If details=1, return all product info otherwise just the basic fields
-    const productRes = showDetails
-      ? { ...product }
-      : {
-          id: product.id,
-          name: product.name,
-          price: product.price,
-          description: product.description,
-        };
-
-    return res.status(200).json(productRes);
+    const product = await response.json();
+    return res.status(200).json(product);
+  } catch (error) {
+    return res.status(500).json({ message: "Fehler beim Abrufen des Produkts" });
   }
 }

@@ -1,7 +1,6 @@
 import { useState } from "react";
 
 function PurchaseModal({ cart, onClose, onCheckoutSuccess }) {
-  // Separate States für die Adressfelder
   const [street, setStreet] = useState("");
   const [houseNumber, setHouseNumber] = useState("");
   const [postalCode, setPostalCode] = useState("");
@@ -12,7 +11,6 @@ function PurchaseModal({ cart, onClose, onCheckoutSuccess }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validierung der Adressfelder
     if (
       !street.trim() ||
       !houseNumber.trim() ||
@@ -76,7 +74,7 @@ function PurchaseModal({ cart, onClose, onCheckoutSuccess }) {
               <input
                 id="street"
                 type="text"
-                className="w-full border border-gray-300 rounded p-2  text-neutral-400"
+                className="w-full border border-gray-300 rounded p-2 text-neutral-400"
                 value={street}
                 onChange={(e) => setStreet(e.target.value)}
                 placeholder="Musterstraße"
@@ -110,7 +108,7 @@ function PurchaseModal({ cart, onClose, onCheckoutSuccess }) {
               <input
                 id="postalCode"
                 type="text"
-                className="w-full border border-gray-300 rounded p-2  text-neutral-400"
+                className="w-full border border-gray-300 rounded p-2 text-neutral-400"
                 value={postalCode}
                 onChange={(e) => setPostalCode(e.target.value)}
                 placeholder="12345"
@@ -126,7 +124,7 @@ function PurchaseModal({ cart, onClose, onCheckoutSuccess }) {
               <input
                 id="city"
                 type="text"
-                className="w-full border border-gray-300 rounded p-2  text-neutral-400"
+                className="w-full border border-gray-300 rounded p-2 text-neutral-400"
                 value={city}
                 onChange={(e) => setCity(e.target.value)}
                 placeholder="Musterstadt"
@@ -136,13 +134,13 @@ function PurchaseModal({ cart, onClose, onCheckoutSuccess }) {
           <div>
             <label
               htmlFor="paymentMethod"
-              className="block mb-1 font-medium  text-neutral-400"
+              className="block mb-1 font-medium text-neutral-400"
             >
               Bezahlmethode
             </label>
             <select
               id="paymentMethod"
-              className="w-full border border-gray-300 rounded p-2  text-neutral-400"
+              className="w-full border border-gray-300 rounded p-2 text-neutral-400"
               value={paymentMethod}
               onChange={(e) => setPaymentMethod(e.target.value)}
             >
@@ -151,12 +149,14 @@ function PurchaseModal({ cart, onClose, onCheckoutSuccess }) {
               <option value="bank-transfer">Banküberweisung</option>
             </select>
           </div>
+
           <p className="text-neutral-400 mb-2">
             {cart.length > 0 &&
               `${cart.length} Artikel für ${cart
                 .reduce((total, item) => total + item.price, 0)
-                .toFixed(2)}€`}
+                .toFixed(2)} €`}
           </p>
+
           <div className="flex space-x-2">
             <button
               type="submit"

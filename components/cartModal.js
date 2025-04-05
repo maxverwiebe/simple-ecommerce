@@ -17,12 +17,12 @@ function CartModal({ cart, onClose, onCheckout, onRemoveItem }) {
                 className="flex justify-between items-center border-b border-gray-200 py-2 text-neutral-400"
               >
                 <span className="font-medium">
-                  {item.name} (€ {item.price.toFixed(2)})
+                  {item.title} (€ {item.price.toFixed(2)})
                 </span>
                 <button
                   onClick={() => onRemoveItem(index)}
                   className="text-red-500 text-xl leading-none"
-                  aria-label={`Entferne ${item.name} aus dem Warenkorb`}
+                  aria-label={`Entferne ${item.title} aus dem Warenkorb`}
                 >
                   &times;
                 </button>
@@ -31,7 +31,7 @@ function CartModal({ cart, onClose, onCheckout, onRemoveItem }) {
           </ul>
         )}
         <p className="font-semibold text-lg text-neutral-600 mb-2">
-          Summe: €
+          Summe: €{" "}
           {cart.reduce((total, item) => total + item.price, 0).toFixed(2)}
         </p>
         <button

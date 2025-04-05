@@ -1,11 +1,18 @@
 import { useEffect, useState } from "react";
-
 import CartModal from "../components/cartModal";
 import ProductModal from "../components/productModal";
 import PurchaseModal from "../components/purchaseModal";
 import SearchBar from "../components/searchBar";
 
 function Toast({ message, onClose }) {
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      onClose();
+    }, 2000); // 2 Sekunden
+
+    return () => clearTimeout(timer);
+  }, [onClose]);
+
   return (
     <div className="fixed bottom-4 right-4 bg-green-500 text-white px-4 py-2 rounded shadow z-50">
       {message}
@@ -33,7 +40,7 @@ export default function Home() {
 
   // Produkte vom Backend laden
   useEffect(() => {
-    fetch("/api/product/*")
+    fetch("/api/products")
       .then((res) => res.json())
       .then((data) => {
         setProducts(data);
@@ -47,7 +54,7 @@ export default function Home() {
 
   const addToCart = (product) => {
     setCart((prev) => [...prev, product]);
-    setToastMessage(`${product.name} wurde zum Warenkorb hinzugefügt.`);
+    setToastMessage(`${product.title} wurde zum Warenkorb hinzugefügt.`);
   };
 
   const removeFromCart = (index) => {
@@ -59,14 +66,7 @@ export default function Home() {
   };
 
   const showDetails = (product) => {
-    fetch(`/api/product/${product.id}?details=1`)
-      .then((res) => res.json())
-      .then((data) => {
-        setActiveProduct(data);
-      })
-      .catch(() => {
-        setToastMessage("Error");
-      });
+    setActiveProduct(product);
   };
 
   const openPurchaseModal = () => {
@@ -89,45 +89,53 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-100">
-      <header className="bg-blue-600 p-4 flex">
-        <h1 className="text-2xl text-white mt-1">Simple E-Commerce</h1>
-        <div className="ml-5">
-          <SearchBar onClick={onSearchClick}></SearchBar>
+    <div className="min-h-screen bg-gray-100 flex flex-col">
+      <header className="bg-blue-600 p-6 flex items-center shadow-md">
+        <h1 className="text-3xl text-white font-semibold">🛒 Simple E-Commerce</h1>
+        <div className="ml-6 flex-1 max-w-md">
+          <SearchBar onClick={onSearchClick} />
         </div>
         <div className="ml-auto">
           <button
             onClick={() => setCartModal(true)}
-            className="bg-green-500 hover:bg-green-600 text-white py-2 px-4 rounded"
+            className="bg-green-500 hover:bg-green-600 text-white py-2 px-5 rounded-lg font-medium shadow transition duration-150"
           >
-            Warenkorb anzeigen ({cart.length})
+            Warenkorb ({cart.length})
           </button>
         </div>
       </header>
-      <main className="p-4">
+
+      <main className="p-6 flex-1">
         {loading ? (
-          <div className="flex justify-center items-center">
+          <div className="flex justify-center items-center h-64">
             <div className="loader border-t-4 border-blue-600 rounded-full w-12 h-12 animate-spin"></div>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
             {products.map((product) => (
-              <div key={product.id} className="bg-white p-4 rounded shadow">
-                <h3 className="text-lg font-bold">{product.name}</h3>
-                <p>{product.description}</p>
-                <p className="mt-2 font-semibold">
+              <div
+                key={product.id}
+                className="bg-white p-5 rounded-2xl shadow hover:shadow-lg transition duration-200 flex flex-col justify-between h-[320px]"
+              >
+                <h3 className="text-xl font-semibold text-gray-800">{product.title}</h3>
+                <p className="text-neutral-500 mt-2">
+                  {product.description.length > 120
+                    ? product.description.slice(0, product.description.lastIndexOf(" ", 120)) + "..."
+                    : product.description}
+                </p>
+                <p className="mt-4 text-lg font-bold text-blue-700">
                   € {product.price.toFixed(2)}
                 </p>
-                <div className="mt-4 flex justify-between">
+                <div className="mt-5 flex justify-between gap-2">
                   <button
                     onClick={() => showDetails(product)}
-                    className="bg-gray-200 hover:bg-gray-300 text-gray-700 py-1 px-2 rounded"
+                    className="bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 px-3 rounded w-full h-10 text-sm"
                   >
                     Details
                   </button>
                   <button
                     onClick={() => addToCart(product)}
-                    className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded"
+                    className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded w-full h-10 text-sm"
                   >
                     In den Warenkorb
                   </button>
@@ -137,10 +145,12 @@ export default function Home() {
           </div>
         )}
       </main>
-      <footer className="p-4 bg-gray-200 text-center">
-        <p>test</p>
+
+      <footer className="p-6 bg-gray-200 text-center text-gray-600 text-sm mt-auto">
+        © {new Date().getFullYear()} Simple E-Commerce.
       </footer>
 
+      {/* Modals */}
       {activeProduct && (
         <ProductModal
           product={activeProduct}
@@ -173,6 +183,12 @@ export default function Home() {
 
       {toastMessage && (
         <Toast message={toastMessage} onClose={() => setToastMessage("")} />
+      )}
+      {successModal && (
+        <Toast
+          message={successMessage}
+          onClose={() => setSuccessModal(false)}
+        />
       )}
     </div>
   );

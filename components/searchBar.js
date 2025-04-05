@@ -45,10 +45,10 @@ function SearchBar({ onClick }) {
           {results.map((result) => (
             <li
               key={result.id}
-              className="p-2 hover:bg-gray-100 cursor-pointer"
+              className="p-2 hover:bg-gray-100 cursor-pointer text-neutral-500"
               onClick={() => onClick(result.id)}
             >
-              {result.id} – {result.name}
+              {result.title}
             </li>
           ))}
         </ul>
