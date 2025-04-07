@@ -25,14 +25,15 @@ export default function ProductCard({ product, onShowDetails, onAddToCart }) {
         <div className="flex gap-2">
           <button
             onClick={() => onShowDetails(product)}
-            className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-1 px-3 rounded text-sm"
+            className="bg-gray-200 hover:bg-gray-300 text-gray-800 py-2 px-3  text-sm rounded-lg transition-colors duration-200 shadow-md "
           >
             Details
           </button>
           <button
             onClick={() => onAddToCart(product)}
-            className="bg-blue-600 hover:bg-blue-700 text-white py-1 px-3 rounded text-sm"
+            className="ml-2 bg-blue-600 hover:bg-blue-700 text-white py-2 px-3 rounded-lg transition-colors duration-200 shadow-md flex items-center"
           >
+            <span className="mr-2">+</span>
             In den Warenkorb
           </button>
         </div>
