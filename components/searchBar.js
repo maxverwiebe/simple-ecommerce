@@ -6,7 +6,6 @@ function SearchBar({ onClick }) {
   const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
-    // Debounce: Warte 300ms, bevor die Suche ausgeführt wird
     const delayDebounce = setTimeout(() => {
       if (query.trim() !== "") {
         setIsLoading(true);
@@ -35,17 +34,17 @@ function SearchBar({ onClick }) {
         placeholder="Suche nach Name oder ID..."
         value={query}
         onChange={(e) => setQuery(e.target.value)}
-        className="w-full border border-gray-300 rounded p-2"
+        className="w-full border border-gray-300 rounded-full px-4 py-2 shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-400 transition-all duration-200"
       />
       {isLoading && (
-        <p className="absolute right-2 top-2 text-sm text-gray-500">Lädt...</p>
+        <p className="absolute right-3 top-2 text-sm text-gray-500">Lädt...</p>
       )}
       {results.length > 0 && (
-        <ul className="z-[10] absolute w-full bg-white border border-gray-300 rounded mt-1 max-h-64 overflow-y-auto">
+        <ul className="z-10 absolute w-full bg-white border border-gray-300 rounded-lg mt-1 max-h-64 overflow-y-auto shadow-md">
           {results.map((result) => (
             <li
               key={result.id}
-              className="p-2 hover:bg-gray-100 cursor-pointer text-neutral-500"
+              className="p-2 hover:bg-gray-100 cursor-pointer text-gray-700 transition-colors duration-150"
               onClick={() => onClick(result.id)}
             >
               {result.title}
